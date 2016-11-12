@@ -17,7 +17,7 @@ public class RobotPlayer {
                 Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST};
         RobotType[] robotTypes = {RobotType.SCOUT, RobotType.SOLDIER, RobotType.SOLDIER, RobotType.SOLDIER,
                 RobotType.GUARD, RobotType.GUARD, RobotType.VIPER, RobotType.TURRET};
-        Random rand = new Random(rc.getID());
+        Random rand = new Random(); //rc.getID()
         int myAttackRange = 0;
         Team myTeam = rc.getTeam();
         Team enemyTeam = myTeam.opponent();
