@@ -32,21 +32,13 @@ public class RobotPlayer {
             while (true) {
                 // This is a loop to prevent the run() method from returning. Because of the Clock.yield()
                 // at the end of it, the loop will iterate once per game round.
-                try {
-                    if(rc.isCoreReady()){
-                        Build(ri);
-                    }
-                    Clock.yield();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                }
+                Build(ri);
             }
         } else if (rc.getType() != RobotType.TURRET) {
             try {
-                
+
                 // Any code here gets executed exactly once at the beginning of the game.
-                myAttackRange = rc.getType().attackRadiusSquared;
+              //  myAttackRange = rc.getType().attackRadiusSquared;
             } catch (Exception e) {
                 // Throwing an uncaught exception makes the robot die, so we need to catch exceptions.
                 // Caught exceptions will result in a bytecode penalty.
@@ -58,6 +50,13 @@ public class RobotPlayer {
                 // This is a loop to prevent the run() method from returning. Because of the Clock.yield()
                 // at the end of it, the loop will iterate once per game round.
                 try {
+                    //do the things here
+                    if(rc.isCoreReady()){
+                        Move(ri);
+
+
+                    }
+
                     Clock.yield();
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -85,7 +84,33 @@ public class RobotPlayer {
         }
     }
 
-    private static void Build(RobotInformation ri) throws GameActionException {
+    private static void Move(RobotInformation ri) throws GameActionException {
+        RobotController rc = ri.rc;
+        Direction dirToMove = ri.GetRandomDirection();
+        // Check the rubble in that direction
+        if (rc.senseRubble(rc.getLocation().add(dirToMove)) >= GameConstants.RUBBLE_OBSTRUCTION_THRESH) {
+            // Too much rubble, don't clear
+            //rc.clearRubble(dirToMove);
+            // Check if I can move in this direction
+        } else if (rc.canMove(dirToMove)) {
+            // Move
+            rc.move(dirToMove);
+        }
+    }
+
+    private static void Build(RobotInformation ri) {
+        try {
+            if(ri.rc.isCoreReady()){
+                BuildSoldier(ri);
+            }
+            Clock.yield();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void BuildSoldier(RobotInformation ri) throws GameActionException {
         RobotController rc = ri.rc;
         RobotType robotType = RobotType.SOLDIER;
         if(rc.hasBuildRequirements(robotType)){
@@ -98,7 +123,7 @@ public class RobotPlayer {
 
     private static Direction GetBuildDirection(RobotInformation ri)
     {
-        Direction direction = ri.directions[ri.GetRandomInt() % 8];
+        Direction direction = ri.GetRandomDirection();
 
         for(int i = 0; i < ri.directions.length; i++)
         {

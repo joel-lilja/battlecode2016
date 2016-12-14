@@ -23,4 +23,7 @@ public class RobotInformation  {
     public int GetRandomInt(){
         return rand.nextInt();
     }
+    public Direction GetRandomDirection(){
+        return directions[GetRandomInt() % 8];
+    }
 }
